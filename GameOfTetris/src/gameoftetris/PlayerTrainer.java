@@ -1,4 +1,4 @@
-package gameoftetris;
+import java.util.Arrays;
 
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
@@ -8,48 +8,47 @@ import org.jgap.Genotype;
 import org.jgap.IChromosome;
 import org.jgap.impl.DefaultConfiguration;
 import org.jgap.impl.DoubleGene;
-import org.jgap.impl.IntegerGene;
 
 public class PlayerTrainer {
-	
-	public static final int MAX_ALLOWED_EVOLUTIONS = 10000000;
-	
-	public static void main(String[] args) throws Exception {
 
-		  Configuration conf = new DefaultConfiguration();
+    public static final int MAX_ALLOWED_EVOLUTIONS = 100;
 
-		  FitnessFunction fitnessFunction = new PlayerFitnessFunction();
+    public static void main(String[] args) throws Exception {
 
-		  conf.setFitnessFunction(fitnessFunction);
+        Configuration conf = new DefaultConfiguration();
 
-		  Gene[] genes = new Gene[ 10 ];
-		  
-		  // Each gene corresponds to a considered feature of the game
-		  genes[0] = new DoubleGene(conf, -100, 100);  
-		  genes[1] = new DoubleGene(conf, -100, 100);  
-		  genes[2] = new DoubleGene(conf, -100, 100);  
-		  genes[3] = new DoubleGene(conf, -100, 100); 
-		  genes[4] = new DoubleGene(conf, -100, 100);  
-		  genes[5] = new DoubleGene(conf, -100, 100); 
-		  genes[6] = new DoubleGene(conf, -100, 100);  
-		  genes[7] = new DoubleGene(conf, -100, 100); 
-		  genes[8] = new DoubleGene(conf, -100, 100);  
-		  genes[9] = new DoubleGene(conf, -100, 100); 
+        FitnessFunction fitnessFunction = new PlayerFitnessFunction();
 
-		  Chromosome chromosome = new Chromosome(conf, genes);
+        conf.setFitnessFunction(fitnessFunction);
 
-		  conf.setSampleChromosome(chromosome);
+        Gene[] genes = new Gene[6];
 
-		  conf.setPopulationSize(500);
-		  
-		  Genotype population = Genotype.randomInitialGenotype(conf);
-		  population.evolve();
-		  
-		  for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++){
-			  population.evolve();
-		  }
-		  
-		  IChromosome bestSolutionSoFar = population.getFittestChromosome();
-	}
-	
+        // Each gene corresponds to a considered feature of the game
+        genes[0] = new DoubleGene(conf, 0, 2);
+        genes[1] = new DoubleGene(conf, 0, 2);
+        genes[2] = new DoubleGene(conf, 0, 2);
+        genes[3] = new DoubleGene(conf, 0, 2);
+        genes[4] = new DoubleGene(conf, 0, 2);
+        genes[5] = new DoubleGene(conf, 0, 2);
+        Chromosome chromosome = new Chromosome(conf, genes);
+
+        conf.setSampleChromosome(chromosome);
+
+        conf.setPopulationSize(10);
+
+        Genotype population = Genotype.randomInitialGenotype(conf);
+        population.evolve();
+
+        for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
+            population.evolve();
+        }
+
+        IChromosome bestSolutionSoFar = population.getFittestChromosome();
+
+        Arrays.stream(bestSolutionSoFar.getGenes())
+            .mapToDouble(gene -> (double) gene.getAllele())
+            .forEach(System.out::println);
+        ;
+    }
+
 }

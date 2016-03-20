@@ -8,11 +8,12 @@ import java.util.Arrays;
 // 5. Terminal i.e. lost state
 public class PlayerSkeleton {
 
-    public static final float HEIGHT_SUM_WEIGHT = 0.51f;
-    public static final float NUM_HOLES_WEIGHT = 0.36f;
-    public static final float COMPLETE_LINES_WEIGHT = 0.8f;
-    public static final float HEIGHT_VAR_WEIGHT = 0.18f;
-    public static final float LOST_WEIGHT = 1f;
+    public static double HEIGHT_SUM_WEIGHT = 0.51f;
+    public static double NUM_HOLES_WEIGHT = 0.66f;
+    public static double COMPLETE_LINES_WEIGHT = 0.8f;
+    public static double HEIGHT_VAR_WEIGHT = 0.8f;
+    public static double LOST_WEIGHT = 1f;
+    public static double MAX_HEIGHT_WEIGHT = 0.1f;
 
     public static class TestState {
         int[][] field;
@@ -114,14 +115,14 @@ public class PlayerSkeleton {
         // legalMoves: an array of n total possible moves
         // each one of n moves contain orientation as index 0 and slot as index
         // 1
-        float bestValueSoFar = -1;
+        double bestValueSoFar = -1;
         TestState bestStateSoFar = null;
         int bestMoveSoFar = 0;
         for (int i = 0; i < legalMoves.length; i++) {
             TestState state = new TestState(s);
             state.makeMove(s.nextPiece, legalMoves[i][ORIENT],
                 legalMoves[i][SLOT]);
-            float value = state.lost ? evaluateOneLevelLower(state)
+            double value = state.lost ? evaluateOneLevelLower(state)
                 : evaluateState(state);
             if (value > bestValueSoFar || bestStateSoFar == null) {
                 bestStateSoFar = state;
@@ -133,8 +134,8 @@ public class PlayerSkeleton {
         return bestMoveSoFar;
     }
 
-    private float evaluateState(TestState state) {
-        float sumLowerLevel = 0;
+    private double evaluateState(TestState state) {
+        double sumLowerLevel = 0;
         int numMoves = 0;
         for (int i = 0; i < N_PIECES; i++) {
             for (int j = 0; j < legalMoves[i].length; j++) {
@@ -149,13 +150,14 @@ public class PlayerSkeleton {
         return sumLowerLevel / numMoves;
     }
 
-    private float evaluateOneLevelLower(TestState state) {
+    private double evaluateOneLevelLower(TestState state) {
         // Evaluate the state given features to be tested and weights
 
-        float h = -heightSum(state) * HEIGHT_SUM_WEIGHT + -numHoles(state)
+        double h = -heightSum(state) * HEIGHT_SUM_WEIGHT + -numHoles(state)
             * NUM_HOLES_WEIGHT + numRowsCleared(state) * COMPLETE_LINES_WEIGHT
             + -heightVariationSum(state) * HEIGHT_VAR_WEIGHT
-            + lostStateValue(state) * LOST_WEIGHT;
+            + lostStateValue(state) * LOST_WEIGHT + -maxHeight(state)
+            * MAX_HEIGHT_WEIGHT;
         return h;
     }
 
@@ -171,6 +173,16 @@ public class PlayerSkeleton {
         }
 
         return sum;
+    }
+
+    private static int maxHeight(TestState s) {
+        int[] top = s.top;
+        int maxSoFar = -1;
+        for (int i : top) {
+            maxSoFar = Math.max(maxSoFar, i);
+        }
+
+        return maxSoFar;
     }
 
     private static int numHoles(TestState s) {
@@ -208,19 +220,40 @@ public class PlayerSkeleton {
 
         State s = new State();
         new TFrame(s);
-        PlayerSkeleton p = new PlayerSkeleton();
+        double[] weights = {50.5361659424388847, 0.9309995852895347,
+            1.9204180105088573, 0.800421901913813, 1.636926959676058,
+            0.1517331363630292};
+        PlayerSkeleton p = new PlayerSkeleton(weights);
         while (!s.lost) {
             s.makeMove(p.pickMove(s, s.legalMoves()));
             s.draw();
             s.drawNext(0, 0);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         System.out.println("You have completed " + s.getRowsCleared()
             + " rows.");
+    }
+
+    public PlayerSkeleton(double[] weights) {
+
+        HEIGHT_SUM_WEIGHT = weights[0];
+        NUM_HOLES_WEIGHT = weights[1];
+        COMPLETE_LINES_WEIGHT = weights[2];
+        HEIGHT_VAR_WEIGHT = weights[3];
+        LOST_WEIGHT = weights[4];
+        MAX_HEIGHT_WEIGHT = weights[5];
+
+    }
+
+    public int run() {
+
+        State s = new State();
+        while (!s.lost) {
+            s.makeMove(pickMove(s, s.legalMoves()));
+        }
+        System.out.println("You have completed " + s.getRowsCleared()
+            + " rows.");
+
+        return s.getRowsCleared();
     }
 
     public static final int COLS = State.COLS;
