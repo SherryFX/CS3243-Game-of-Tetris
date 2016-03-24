@@ -23,8 +23,16 @@ import org.jgap.impl.DoubleGene;
 public class PlayerTrainer {
 
 	// Set these values if you want to automatically generate chromosomes
+	// According to some research, the optimal setting is 100 chromosomes with 200 generations
+	// I suggest you set MAX_ALLOWED_EVOLUTIONS to 1, and run the program periodically rather than 
+	// setting MAX_ALLOWED_EVOLUTIONS to a large number, 
+	// since each generation can take a significant amount of time.
+	// For the first run, have chromosomes auto generated randomly. 
+	// The chromosomes will be saved into log.txt
+	// For future runs, have chromosomes manually retrieved from log.txt. 
+	// 
     public static final int MAX_ALLOWED_EVOLUTIONS = 1;
-    public static final int POPULATION_SIZE = 2;
+    public static final int POPULATION_SIZE = 100;
 
     public static void main(String[] args) throws Exception {
 
