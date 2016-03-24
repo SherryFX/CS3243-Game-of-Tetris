@@ -1,4 +1,4 @@
-
+package gameoftetris;
 
 import java.awt.Color;
 
