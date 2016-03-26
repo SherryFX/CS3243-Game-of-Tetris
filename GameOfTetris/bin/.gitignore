@@ -1,1 +1,13 @@
-/gameoftetris/
+/PlayerFitnessFunction.class
+/PlayerSkeleton$TestState.class
+/PlayerSkeleton.class
+/PlayerSkeleton2$1.class
+/PlayerSkeleton2$ColumnDiff.class
+/PlayerSkeleton2$DeepestWell.class
+/PlayerSkeleton2$DummyEvaluator.class
+/PlayerSkeleton2$HasLost.class
+/PlayerSkeleton2$ImmutableState.class
+/PlayerSkeleton2$MeanHeightDifference.class
+/PlayerSkeleton2$MoveEvaluator.class
+/PlayerSkeleton2$NumFaults.class
+/PlayerSkeleton2$ReduceFunc.class
