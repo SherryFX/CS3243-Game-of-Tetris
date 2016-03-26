@@ -1,3 +1,5 @@
+package gameoftetris;
+
 import java.util.Arrays;
 
 // Features being used are:

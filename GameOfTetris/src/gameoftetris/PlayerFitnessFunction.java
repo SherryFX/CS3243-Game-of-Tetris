@@ -1,3 +1,5 @@
+package gameoftetris;
+
 import java.util.Arrays;
 
 import org.jgap.FitnessFunction;
