@@ -1,5 +1,3 @@
-package gameoftetris;
-
 import java.util.Arrays;
 
 // Features being used are:
@@ -16,8 +14,8 @@ public class PlayerSkeleton {
     public static double HEIGHT_VAR_WEIGHT = 327.15828f;
     public static double LOST_WEIGHT = 943.2513f;
     public static double MAX_HEIGHT_WEIGHT = 155.662536f;
-    public static final double pitDepthsWeight = 614.81148f;
-    public static final double meanHeightDifferenceWeight = 513.80154f;
+    public static double PIT_DEPTH_WEIGHT = 614.81148f;
+    public static double MEAN_HEIGHT_DIFF_WEIGHT = 513.80154f;
 
     public static class TestState {
         int[][] field;
@@ -162,9 +160,9 @@ public class PlayerSkeleton {
         -numHoles(state) * NUM_HOLES_WEIGHT + numRowsCleared(state)
             * COMPLETE_LINES_WEIGHT + -heightVariationSum(state)
             * HEIGHT_VAR_WEIGHT + lostStateValue(state) * LOST_WEIGHT
-            + -maxHeight(state) * MAX_HEIGHT_WEIGHT + -pitEval(state)
-            * pitDepthsWeight + -meanHeightEval(state)
-            * meanHeightDifferenceWeight;
+            + -maxHeight(state) * MAX_HEIGHT_WEIGHT + -pitDepthValue(state)
+            * PIT_DEPTH_WEIGHT + -meanHeightDiffValue(state)
+            * MEAN_HEIGHT_DIFF_WEIGHT;
         return h;
     }
 
@@ -227,7 +225,7 @@ public class PlayerSkeleton {
     // two blocks and the pit depth
     // is defined as the difference between the height of the pit column and the
     // shortest adjacent column.
-    public double pitEval(TestState s) {
+    public double pitDepthValue(TestState s) {
         int[] top = s.top;
         int sumOfPitDepths = 0;
 
@@ -271,7 +269,7 @@ public class PlayerSkeleton {
 
     // Mean height difference, the average of the difference between the height
     // of each column and the mean height of the state.
-    public double meanHeightEval(TestState s) {
+    public double meanHeightDiffValue(TestState s) {
         int[] top = s.top;
 
         int sum = 0;
@@ -293,9 +291,9 @@ public class PlayerSkeleton {
 
         State s = new State();
         new TFrame(s);
-        double[] weights = {50.5361659424388847, 0.9309995852895347,
-            1.9204180105088573, 0.800421901913813, 1.636926959676058,
-            0.1517331363630292};
+        double[] weights = {1.7543842462960066, 0.7827553929832798,
+            0.23258596569427303, 1.9076624970737268, 0.11549582286646198,
+            0.4724359966989109, 0.7970665369778156};
         PlayerSkeleton p = new PlayerSkeleton(weights);
         while (!s.lost) {
             s.makeMove(p.pickMove(s, s.legalMoves()));
@@ -307,7 +305,17 @@ public class PlayerSkeleton {
     }
 
     public PlayerSkeleton(double[] weights) {
+        NUM_HOLES_WEIGHT = weights[0];
+        COMPLETE_LINES_WEIGHT = weights[1];
+        HEIGHT_VAR_WEIGHT = weights[2];
+        LOST_WEIGHT = weights[3];
+        MAX_HEIGHT_WEIGHT = weights[4];
+        PIT_DEPTH_WEIGHT = weights[5];
+        MEAN_HEIGHT_DIFF_WEIGHT = weights[6];
 
+    }
+
+    public PlayerSkeleton() {
     }
 
     public int run() {
