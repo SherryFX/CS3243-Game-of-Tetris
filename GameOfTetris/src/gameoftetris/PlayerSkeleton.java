@@ -52,8 +52,7 @@ public class PlayerSkeleton {
             int height = top[slot] - pBottom[piece][orient][0];
             // for each column beyond the first in the piece
             for (int c = 1; c < pWidth[piece][orient]; c++) {
-                height = Math.max(height, top[slot + c]
-                    - pBottom[piece][orient][c]);
+                height = Math.max(height, top[slot + c] - pBottom[piece][orient][c]);
             }
 
             // check if game ended
@@ -66,8 +65,7 @@ public class PlayerSkeleton {
             for (int i = 0; i < pWidth[piece][orient]; i++) {
 
                 // from bottom to top of brick
-                for (int h = height + pBottom[piece][orient][i]; h < height
-                    + pTop[piece][orient][i]; h++) {
+                for (int h = height + pBottom[piece][orient][i]; h < height + pTop[piece][orient][i]; h++) {
                     field[h][i + slot] = turn;
                 }
             }
@@ -122,11 +120,9 @@ public class PlayerSkeleton {
         int bestMoveSoFar = 0;
         for (int i = 0; i < legalMoves.length; i++) {
             TestState state = new TestState(s);
-            state.makeMove(s.nextPiece, legalMoves[i][ORIENT],
-                legalMoves[i][SLOT]);
-            // double value = !state.lost ? evaluateState(state)
-            // : evaluateOneLevelLower(state);
-            double value = evaluateOneLevelLower(state);
+            state.makeMove(s.nextPiece, legalMoves[i][ORIENT], legalMoves[i][SLOT]);
+            double value = !state.lost ? evaluateState(state) : evaluateOneLevelLower(state);
+            // double value = evaluateOneLevelLower(state);
             if (value > bestValueSoFar || bestStateSoFar == null) {
                 bestStateSoFar = state;
                 bestValueSoFar = value;
@@ -139,30 +135,29 @@ public class PlayerSkeleton {
 
     private double evaluateState(TestState state) {
         double sumLowerLevel = 0;
-        int numMoves = 0;
         for (int i = 0; i < N_PIECES; i++) {
+            double maxSoFar = Integer.MIN_VALUE;
             for (int j = 0; j < legalMoves[i].length; j++) {
                 TestState lowerState = new TestState(state);
-                lowerState.makeMove(i, legalMoves[i][j][ORIENT],
-                    legalMoves[i][j][SLOT]);
-                sumLowerLevel += evaluateOneLevelLower(lowerState);
-                numMoves++;
+                lowerState.makeMove(i, legalMoves[i][j][ORIENT], legalMoves[i][j][SLOT]);
+                maxSoFar = Math.max(maxSoFar, evaluateOneLevelLower(lowerState));
+
             }
+            sumLowerLevel += maxSoFar;
         }
 
-        return sumLowerLevel / numMoves;
+        return sumLowerLevel / N_PIECES;
     }
 
     private double evaluateOneLevelLower(TestState state) {
         // Evaluate the state given features to be tested and weights
 
-        double h = /*-heightSum(state) * HEIGHT_SUM_WEIGHT + */
-        -numHoles(state) * NUM_HOLES_WEIGHT + numRowsCleared(state)
-            * COMPLETE_LINES_WEIGHT + -heightVariationSum(state)
-            * HEIGHT_VAR_WEIGHT + lostStateValue(state) * LOST_WEIGHT
-            + -maxHeight(state) * MAX_HEIGHT_WEIGHT + -pitDepthValue(state)
-            * PIT_DEPTH_WEIGHT + -meanHeightDiffValue(state)
-            * MEAN_HEIGHT_DIFF_WEIGHT;
+        double h =
+            /*-heightSum(state) * HEIGHT_SUM_WEIGHT + */
+            -numHoles(state) * NUM_HOLES_WEIGHT + numRowsCleared(state) * COMPLETE_LINES_WEIGHT
+                + -heightVariationSum(state) * HEIGHT_VAR_WEIGHT + lostStateValue(state) * LOST_WEIGHT
+                + -maxHeight(state) * MAX_HEIGHT_WEIGHT + -pitDepthValue(state) * PIT_DEPTH_WEIGHT
+                + -meanHeightDiffValue(state) * MEAN_HEIGHT_DIFF_WEIGHT;
         return h;
     }
 
@@ -290,18 +285,18 @@ public class PlayerSkeleton {
     public static void main(String[] args) {
 
         State s = new State();
-        new TFrame(s);
-        double[] weights = {1.7543842462960066, 0.7827553929832798,
-            0.23258596569427303, 1.9076624970737268, 0.11549582286646198,
-            0.4724359966989109, 0.7970665369778156};
+        // new TFrame(s);
+        double[] weights =
+            {1.7543842462960066, 0.7827553929832798, 0.23258596569427303, 1.9076624970737268, 0.11549582286646198,
+                0.4724359966989109, 0.7970665369778156};
         PlayerSkeleton p = new PlayerSkeleton(weights);
         while (!s.lost) {
             s.makeMove(p.pickMove(s, s.legalMoves()));
-            s.draw();
-            s.drawNext(0, 0);
+            // System.out.println(s.getRowsCleared());
+            // s.draw();
+            // s.drawNext(0, 0);
         }
-        System.out.println("You have completed " + s.getRowsCleared()
-            + " rows.");
+        System.out.println("You have completed " + s.getRowsCleared() + " rows.");
     }
 
     public PlayerSkeleton(double[] weights) {
@@ -323,9 +318,11 @@ public class PlayerSkeleton {
         State s = new State();
         while (!s.lost) {
             s.makeMove(pickMove(s, s.legalMoves()));
+            if (s.getRowsCleared() % 100000 == 0) {
+                System.out.println(s.getRowsCleared());
+            }
         }
-        System.out.println("You have completed " + s.getRowsCleared()
-            + " rows.");
+        System.out.println("You have completed " + s.getRowsCleared() + " rows.");
 
         return s.getRowsCleared();
     }
@@ -346,8 +343,7 @@ public class PlayerSkeleton {
 
     // the next several arrays define the piece vocabulary in detail
     // width of the pieces [piece ID][orientation]
-    protected static int[][] pWidth = { {2}, {1, 4}, {2, 3, 2, 3},
-        {2, 3, 2, 3}, {2, 3, 2, 3}, {3, 2}, {3, 2}};
+    protected static int[][] pWidth = { {2}, {1, 4}, {2, 3, 2, 3}, {2, 3, 2, 3}, {2, 3, 2, 3}, {3, 2}, {3, 2}};
     // height of the pieces [piece ID][orientation]
     private static int[][] pHeight = { {2}, // square
         {4, 1}, // vertical piece
@@ -355,17 +351,12 @@ public class PlayerSkeleton {
         {3, 2, 3, 2}, //
         {3, 2, 3, 2}, // T
         {2, 3}, {2, 3}};
-    private static int[][][] pBottom = {
-        {{0, 0}},
-        { {0}, {0, 0, 0, 0}},
+    private static int[][][] pBottom = { {{0, 0}}, { {0}, {0, 0, 0, 0}},
         { {0, 0}, {0, 1, 1}, {2, 0}, {0, 0, 0}}, // L,
-        { {0, 0}, {0, 0, 0}, {0, 2}, {1, 1, 0}},
-        { {0, 1}, {1, 0, 1}, {1, 0}, {0, 0, 0}}, { {0, 0, 1}, {1, 0}},
+        { {0, 0}, {0, 0, 0}, {0, 2}, {1, 1, 0}}, { {0, 1}, {1, 0, 1}, {1, 0}, {0, 0, 0}}, { {0, 0, 1}, {1, 0}},
         { {1, 0, 0}, {0, 1}}};
-    private static int[][][] pTop = { {{2, 2}}, { {4}, {1, 1, 1, 1}},
-        { {3, 1}, {2, 2, 2}, {3, 3}, {1, 1, 2}},
-        { {1, 3}, {2, 1, 1}, {3, 3}, {2, 2, 2}},
-        { {3, 2}, {2, 2, 2}, {2, 3}, {1, 2, 1}}, { {1, 2, 2}, {3, 2}},
+    private static int[][][] pTop = { {{2, 2}}, { {4}, {1, 1, 1, 1}}, { {3, 1}, {2, 2, 2}, {3, 3}, {1, 1, 2}},
+        { {1, 3}, {2, 1, 1}, {3, 3}, {2, 2, 2}}, { {3, 2}, {2, 2, 2}, {2, 3}, {1, 2, 1}}, { {1, 2, 2}, {3, 2}},
         { {2, 2, 1}, {2, 3}}};
 
     // initialize legalMoves
