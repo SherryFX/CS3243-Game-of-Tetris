@@ -318,9 +318,9 @@ public class PlayerSkeleton {
         State s = new State();
         while (!s.lost) {
             s.makeMove(pickMove(s, s.legalMoves()));
-            if (s.getRowsCleared() % 100000 == 0) {
-                System.out.println(s.getRowsCleared());
-            }
+            //if (s.getRowsCleared() % 100000 == 0) {
+                //System.out.println(s.getRowsCleared());
+            //}
         }
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");
 
