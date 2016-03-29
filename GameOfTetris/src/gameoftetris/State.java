@@ -1,3 +1,5 @@
+package gameoftetris;
+
 import java.awt.Color;
 
 public class State {
