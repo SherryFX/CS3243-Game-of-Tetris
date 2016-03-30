@@ -19,7 +19,6 @@ import org.jgap.IChromosome;
 import org.jgap.Population;
 import org.jgap.impl.DefaultConfiguration;
 import org.jgap.impl.DoubleGene;
-import org.jgap.impl.MutationOperator;
 
 public class PlayerTrainer {
 
@@ -34,22 +33,15 @@ public class PlayerTrainer {
 	// The chromosomes will be saved into log.txt
 	// For future runs, have chromosomes manually retrieved from log.txt.
 	//
+	public static final int NUM_THREADS = 4;
 	public static final int MAX_ALLOWED_EVOLUTIONS = 10;
-	public static final int POPULATION_SIZE = 4;
+	public static final int POPULATION_SIZE = 100;
 
 	public static void main(String[] args) throws Exception {
 
 		// Transfer all readings from log.txt to log_old.txt
 		// log_old.txt is like a backup
-		FileInputStream srcStream = new FileInputStream("log.txt");
-		FileOutputStream destStream = new FileOutputStream("log_old.txt");
-		FileChannel src = srcStream.getChannel();
-		FileChannel dest = destStream.getChannel();
-		dest.transferFrom(src, 0, src.size());
-		srcStream.close();
-		destStream.close();
-
-		BufferedReader in = new BufferedReader(new FileReader("log.txt"));
+		backupLog();
 
 		Configuration conf = new DefaultConfiguration();
 		FitnessFunction fitnessFunction = new PlayerFitnessFunction();
@@ -78,7 +70,7 @@ public class PlayerTrainer {
 		// MANUAL GENERATION OF CHROMOSOMES ---------------------------
 		// Uncomment this section to manually generate chromosomes from log.txt
 		// Population size will set to number of chromosomes read from log.txt
-
+//      BufferedReader in = new BufferedReader(new FileReader("log.txt"));
 //		Population p = new Population(conf); 
 //		String line = null; 
 //		int count = 0; 
@@ -101,36 +93,17 @@ public class PlayerTrainer {
 //			p.addChromosome(c); 
 //			count++; 
 //		}
+//      in.close();
 //		conf.setPopulationSize(count); 
 //		Genotype population = new Genotype(conf, p);
 
 		// ------------------------------------------------------------
-		in.close();
 		
-		// Clear log.txt once data is backed up to log_old.txt
-		PrintWriter out = new PrintWriter("log.txt");
-		out.print("");
-		out.close();
-
-
 		for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
+			System.out.println("EVOLUTION CYCLE NO. " + i);
 			population.evolve();
 			IChromosome[] chromosomes = population.getPopulation().toChromosomes();
-			System.out.println("Turn " + i);
 			updateLog(chromosomes);
-		}
-
-		IChromosome[] chromosomes = population.getPopulation().toChromosomes();
-		for (int j = 0; j < chromosomes.length; j++) {
-			String s = "";
-			IChromosome c = chromosomes[j];
-			Gene[] gene_array = c.getGenes();
-			for (int k = 0; k < gene_array.length; k++) {
-				Gene g = gene_array[k];
-				s += (double) g.getAllele() + " ";
-			}
-			s += c.getFitnessValue();
-			out.println(s);
 		}
 
 		IChromosome bestSolutionSoFar = population.getFittestChromosome();
@@ -141,6 +114,7 @@ public class PlayerTrainer {
 	}
 	
 	public static void updateLog(IChromosome[] chromosomes) throws IOException{
+		backupLog();
 		clearLog();
 		PrintWriter out = new PrintWriter(new BufferedWriter(
 				new FileWriter("log.txt", true)));
@@ -162,6 +136,16 @@ public class PlayerTrainer {
 		PrintWriter out = new PrintWriter("log.txt");
 		out.print("");
 		out.close();
+	}
+	
+	public static void backupLog() throws IOException {
+		FileInputStream srcStream = new FileInputStream("log.txt");
+		FileOutputStream destStream = new FileOutputStream("log_old.txt");
+		FileChannel src = srcStream.getChannel();
+		FileChannel dest = destStream.getChannel();
+		dest.transferFrom(src, 0, src.size());
+		srcStream.close();
+		destStream.close();
 	}
 
 }
