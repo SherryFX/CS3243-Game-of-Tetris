@@ -3,3 +3,4 @@
 /Mutex.class
 /Mutex$Semaphore.class
 /TestFitnessFunction.class
+*.class
