@@ -28,9 +28,9 @@ import org.jgap.impl.job.SimplePopulationSplitter;
 public class PlayerTrainerMT {
 
 	public static final int NUM_THREADS = 4;
-	public static final int MAX_EVOLUTION_PERIOD = 1;
-	public static final int MAX_EVOLUTION_CYCLES = 2;
-	public static final int POPULATION_SIZE = 6;
+	public static final int MAX_EVOLUTION_PERIOD = 40;
+	public static final int MAX_EVOLUTION_CYCLES = 5;
+	public static final int POPULATION_SIZE = 100;
 
 	public static void main(String[] args) throws Exception {
 
@@ -51,6 +51,7 @@ public class PlayerTrainerMT {
 		rootConf.setSampleChromosome(sampleChromosome);
 		rootConf.setPopulationSize(POPULATION_SIZE * NUM_THREADS);
 		rootConf.setFitnessFunction(new PlayerFitnessFunction());
+		//rootConf.setFitnessFunction(new TestFitnessFunction());
 		Genotype gt = Genotype.randomInitialGenotype(rootConf);
 		Population[] populations = pSplitter.split(gt.getPopulation());
 		
@@ -81,6 +82,7 @@ public class PlayerTrainerMT {
 		
 		for (int i = 0; i < NUM_THREADS; i++){
 		    // Construct configuration with unique ID, this is important.
+			Configuration.reset(i + "");
 		    Configuration conf = new DefaultConfiguration(i + "", "Conf for thread");
 		    Gene[] genes = new Gene[7];
 			genes[0] = new DoubleGene(conf, 0, 2);
@@ -113,7 +115,7 @@ public class PlayerTrainerMT {
 			            t1.interrupt();
 			            monitor.getPopulations();
 			            Population p = breeder.getLastPopulation();
-			            System.out.println(t1.getName() + " has completed 1 evolution period.");
+			            System.out.println(t1.getName() + " has completed " + evno + " evolution periods.");
 			            try {
 							mutex.release();
 							newPopulations[Integer.parseInt(conf.getId())] = p;
