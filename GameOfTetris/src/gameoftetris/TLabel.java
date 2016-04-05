@@ -1,5 +1,3 @@
-package gameoftetris;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Container;
@@ -208,10 +206,8 @@ public class TLabel {
     public TLabel(int w, int h) {
         width = w;
         height = h;
-        offscreenImage = new BufferedImage(width, height,
-            BufferedImage.TYPE_INT_ARGB);
-        onscreenImage = new BufferedImage(width, height,
-            BufferedImage.TYPE_INT_ARGB);
+        offscreenImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        onscreenImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         offscreen = offscreenImage.createGraphics();
         onscreen = onscreenImage.createGraphics();
         setXscale();
@@ -224,10 +220,8 @@ public class TLabel {
         clear();
 
         // add antialiasing
-        RenderingHints hints = new RenderingHints(
-            RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        hints.put(RenderingHints.KEY_RENDERING,
-            RenderingHints.VALUE_RENDER_QUALITY);
+        RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         offscreen.addRenderingHints(hints);
 
         // frame stuff
@@ -275,14 +269,12 @@ public class TLabel {
     public void line(double x0, double y0, double x1, double y1) {
         // System.out.println("drawing a line from " + new Point(x0,
         // y0).toString()+ " to " + new Point(x1,y1).toString());
-        offscreen.draw(new Line2D.Double(scaleX(x0), scaleY(y0), scaleX(x1),
-            scaleY(y1)));
+        offscreen.draw(new Line2D.Double(scaleX(x0), scaleY(y0), scaleX(x1), scaleY(y1)));
     }
 
     // draw one pixel at (x, y)
     public void pixel(double x, double y) {
-        offscreen.fillRect((int) Math.round(scaleX(x)),
-            (int) Math.round(scaleY(y)), 1, 1);
+        offscreen.fillRect((int) Math.round(scaleX(x)), (int) Math.round(scaleY(y)), 1, 1);
     }
 
     // draw one pixel at (x, y)
@@ -310,8 +302,7 @@ public class TLabel {
             offscreen.fill(new Ellipse2D.Double(xs - r / 2, ys - r / 2, r, r));
     }
 
-    public void arc(double x, double y, double r, double startAngle,
-        double arcRange) {
+    public void arc(double x, double y, double r, double startAngle, double arcRange) {
         double xs = scaleX(x);
         double ys = scaleY(y);
         double ws = factorX(2 * r);
@@ -319,8 +310,7 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else
-            offscreen.draw(new Arc2D.Double(xs - ws / 2, ys - hs / 2, ws, hs,
-                startAngle, arcRange, Arc2D.OPEN));
+            offscreen.draw(new Arc2D.Double(xs - ws / 2, ys - hs / 2, ws, hs, startAngle, arcRange, Arc2D.OPEN));
 
     }
 
@@ -333,8 +323,7 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else
-            offscreen.draw(new Ellipse2D.Double(xs - ws / 2, ys - hs / 2, ws,
-                hs));
+            offscreen.draw(new Ellipse2D.Double(xs - ws / 2, ys - hs / 2, ws, hs));
     }
 
     public void circleP(double x, double y, double r, Color col) {
@@ -350,8 +339,7 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else
-            offscreen.draw(new Ellipse2D.Double(xs - ws / 2, ys - hs / 2, ws,
-                hs));
+            offscreen.draw(new Ellipse2D.Double(xs - ws / 2, ys - hs / 2, ws, hs));
     }
 
     public void circle(double x, double y, double r, Color color) {
@@ -369,8 +357,7 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else
-            offscreen.fill(new Ellipse2D.Double(xs - ws / 2, ys - hs / 2, ws,
-                hs));
+            offscreen.fill(new Ellipse2D.Double(xs - ws / 2, ys - hs / 2, ws, hs));
     }
 
     public void filledCircleP(double x, double y, double r) {
@@ -379,8 +366,7 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else
-            offscreen
-                .fill(new Ellipse2D.Double(x - ws / 2, y - hs / 2, ws, hs));
+            offscreen.fill(new Ellipse2D.Double(x - ws / 2, y - hs / 2, ws, hs));
     }
 
     // draw squared of side length 2r, centered on (x, y); degenerate to pixel
@@ -394,8 +380,7 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else
-            offscreen.draw(new Rectangle2D.Double(xs - ws / 2, ys - hs / 2, ws,
-                hs));
+            offscreen.draw(new Rectangle2D.Double(xs - ws / 2, ys - hs / 2, ws, hs));
     }
 
     // draw squared of side length 2r, centered on (x, y); degenerate to pixel
@@ -409,23 +394,18 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else
-            offscreen.fill(new Rectangle2D.Double(xs - ws / 2, ys - hs / 2, ws,
-                hs));
+            offscreen.fill(new Rectangle2D.Double(xs - ws / 2, ys - hs / 2, ws, hs));
     }
 
     // Draw an arrow of the appropriate scale, color, position
-    public void Arrow(double x, double y, double w, double h, double Scale,
-        Color Color) {
+    public void Arrow(double x, double y, double w, double h, double Scale, Color Color) {
         rectangle(x, y, w, h, Color);
-        double[] xarray = {
-            x + w / 2 - w / 10 + Scale * 1 / 10 * Math.sqrt(h * h * 25 + w * w)
-                * Math.sqrt(3) / 3, x + w / 2 - w / 10, x + w / 2 - w / 10};
-        double[] yarray = {
-            y,
-            y + Scale * 1 / 10 * Math.sqrt(h * h * 25 + w * w) * Math.sqrt(2)
-                / 2,
-            y - Scale * 1 / 10 * Math.sqrt(h * h * 25 + w * w) * Math.sqrt(2)
-                / 2};
+        double[] xarray =
+            {x + w / 2 - w / 10 + Scale * 1 / 10 * Math.sqrt(h * h * 25 + w * w) * Math.sqrt(3) / 3,
+                x + w / 2 - w / 10, x + w / 2 - w / 10};
+        double[] yarray =
+            {y, y + Scale * 1 / 10 * Math.sqrt(h * h * 25 + w * w) * Math.sqrt(2) / 2,
+                y - Scale * 1 / 10 * Math.sqrt(h * h * 25 + w * w) * Math.sqrt(2) / 2};
         setPenColor(Color);
         filledPolygon(xarray, yarray);
         setPenColor();
@@ -518,8 +498,7 @@ public class TLabel {
         setPenColor(DEFAULT_PEN_COLOR);
     }
 
-    public void filledRectangleLL(double x, double y, double w, double h,
-        Color c) {
+    public void filledRectangleLL(double x, double y, double w, double h, Color c) {
         double[] xarray = {x, x, x + w, x + w};
         double[] yarray = {y, y + h, y + h, y};
         setPenColor(c);
@@ -527,8 +506,7 @@ public class TLabel {
         setPenColor(DEFAULT_PEN_COLOR);
     }
 
-    public void rectangle(double x, double y, double w, double h, Color c,
-        boolean Border, Color BorderColor) {
+    public void rectangle(double x, double y, double w, double h, Color c, boolean Border, Color BorderColor) {
 
         double[] xarray = {x - w / 2, x - w / 2, x + w / 2, x + w / 2};
         double[] yarray = {y - h / 2, y + h / 2, y + h / 2, y - h / 2};
@@ -552,8 +530,7 @@ public class TLabel {
         if (ws <= 1 && hs <= 1)
             pixel(x, y);
         else {
-            offscreen.drawImage(image, (int) Math.round(xs),
-                (int) Math.round(ys), (int) Math.round(ws),
+            offscreen.drawImage(image, (int) Math.round(xs), (int) Math.round(ys), (int) Math.round(ws),
                 (int) Math.round(hs), null);
         }
     }
@@ -563,21 +540,18 @@ public class TLabel {
 
         // if (ws <= 1 && hs <= 1) pixel(x, y);
 
-        offscreen.drawImage(image, (int) Math.round(x), (int) Math.round(y),
-            null);
+        offscreen.drawImage(image, (int) Math.round(x), (int) Math.round(y), null);
 
     }
 
     // Invert an image
     public BufferedImage invert(Image image) {
-        BufferedImage b1 = new BufferedImage(image.getWidth(null),
-            image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        BufferedImage b1 = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
         Graphics bg = b1.getGraphics();
         bg.drawImage(image, 0, 0, null);
         bg.dispose();
 
-        BufferedImage b2 = new BufferedImage(image.getWidth(null),
-            image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        BufferedImage b2 = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
         DataBuffer db1 = b1.getRaster().getDataBuffer();
         DataBuffer db2 = b2.getRaster().getDataBuffer();
 
@@ -661,14 +635,11 @@ public class TLabel {
         double ys = scaleY(y);
         int ws = metrics.stringWidth(s);
         int hs = metrics.getDescent();
-        BufferedImage bimage = new BufferedImage(ws, hs,
-            BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bimage = new BufferedImage(ws, hs, BufferedImage.TYPE_INT_ARGB);
         Graphics2D bimagegraphics = bimage.createGraphics();
-        bimagegraphics
-            .drawString(s, (float) (xs - ws / 2.0), (float) (ys + hs));
+        bimagegraphics.drawString(s, (float) (xs - ws / 2.0), (float) (ys + hs));
         BufferedImage bimage2 = invert(bimage);
-        offscreen.drawImage(bimage2, (int) Math.round(xs - ws / 2.0),
-            (int) Math.round(ys + hs), null);
+        offscreen.drawImage(bimage2, (int) Math.round(xs - ws / 2.0), (int) Math.round(ys + hs), null);
     }
 
     // view on-screen, creating new frame if necessary

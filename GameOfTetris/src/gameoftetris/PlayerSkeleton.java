@@ -1,5 +1,3 @@
-package gameoftetris;
-
 import java.util.Arrays;
 
 // Features being used are:
@@ -287,22 +285,15 @@ public class PlayerSkeleton {
     public static void main(String[] args) {
 
         State s = new State();
-     //   new TFrame(s);
+        new TFrame(s);
         double[] weights =
-            {1.8312057057822908,
-            		0.9725091437103375,
-            		0.3567297944529728,
-            		0.6249287636118577,
-            		0.051962392158941606,
-            		0.52385888919136,
-            		0.04735265759954377
-};
+            {1.686979710938898, 1.439523351584957, 0.2598168084297616, 1.6410522661954996, 0.0349656144748447,
+                0.6419371581069582, 0.2096967612109506};
         PlayerSkeleton p = new PlayerSkeleton(weights);
         while (!s.lost) {
             s.makeMove(p.pickMove(s, s.legalMoves()));
-            // System.out.println(s.getRowsCleared());
-        //    s.draw();
-        //    s.drawNext(0, 0);
+            s.draw();
+            s.drawNext(0, 0);
         }
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");
     }
@@ -326,7 +317,6 @@ public class PlayerSkeleton {
         State s = new State();
         while (!s.lost) {
             s.makeMove(pickMove(s, s.legalMoves()));
-            
         }
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");
 
