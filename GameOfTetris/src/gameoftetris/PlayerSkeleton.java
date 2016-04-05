@@ -287,13 +287,14 @@ public class PlayerSkeleton {
         State s = new State();
         new TFrame(s);
         double[] weights =
-            {1.686979710938898, 1.439523351584957, 0.2598168084297616, 1.6410522661954996, 0.0349656144748447,
-                0.6419371581069582, 0.2096967612109506};
+            {1.7851855342334024, 1.4138726176225629, 0.3567297944529728, 0.6249287636118577, 0.051962392158941606,
+                0.52385888919136, 0.12090744319379954};
         PlayerSkeleton p = new PlayerSkeleton(weights);
         while (!s.lost) {
             s.makeMove(p.pickMove(s, s.legalMoves()));
-            s.draw();
-            s.drawNext(0, 0);
+            // System.out.println(s.getRowsCleared());
+            // s.draw();
+            // s.drawNext(0, 0);
         }
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");
     }
@@ -317,6 +318,9 @@ public class PlayerSkeleton {
         State s = new State();
         while (!s.lost) {
             s.makeMove(pickMove(s, s.legalMoves()));
+            // if (s.getRowsCleared() % 100000 == 0) {
+            // System.out.println(s.getRowsCleared());
+            // }
         }
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");
 

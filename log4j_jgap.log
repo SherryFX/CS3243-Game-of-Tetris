@@ -1,0 +1,29 @@
+[30.03.2016 00:52:58,268] [main] WARN  org.homedns.dade.jcgrid.GridNode  - Starting JCGrid Node...
+[30.03.2016 00:52:58,272] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server address: localhost
+[30.03.2016 00:52:58,272] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server client port: 10101
+[30.03.2016 00:52:58,273] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server worker port: 10102
+[30.03.2016 00:52:58,273] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server admin. port: 10103
+[30.03.2016 00:52:58,273] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Working dir.: /Users/Wenqi/Dropbox/NUS/sem 4/workspace/CS3243-Game-of-Tetris/cache
+[30.03.2016 00:52:58,273] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Use secure connection: no
+[30.03.2016 00:52:58,274] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Node type: SERVER
+[30.03.2016 00:52:58,274] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Use compressed connection: no
+[30.03.2016 00:52:58,277] [main] WARN  org.homedns.dade.jcgrid.vfs.vfsSessionPool  - VFS session pool on path: /Users/Wenqi/Dropbox/NUS/sem 4/workspace/CS3243-Game-of-Tetris/cache
+[30.03.2016 00:52:58,278] [main] WARN  org.homedns.dade.jcgrid.server.GridServer  - VFS Session cache size: 0/64MB
+[30.03.2016 00:52:58,292] [main] WARN  org.homedns.dade.jcgrid.server.GridServer  - Ok
+[30.03.2016 00:52:58,302] [main] WARN  org.homedns.dade.jcgrid.GridNode  - Starting JCGrid Node...
+[30.03.2016 00:52:58,303] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server address: localhost
+[30.03.2016 00:52:58,305] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server client port: 10101
+[30.03.2016 00:52:58,305] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server worker port: 10102
+[30.03.2016 00:52:58,311] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Server admin. port: 10103
+[30.03.2016 00:52:58,312] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Working dir.: /Users/Wenqi/Dropbox/NUS/sem 4/workspace/CS3243-Game-of-Tetris/cache_0
+[30.03.2016 00:52:58,312] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Use secure connection: no
+[30.03.2016 00:52:58,313] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Node type: WORKER
+[30.03.2016 00:52:58,313] [main] WARN  org.homedns.dade.jcgrid.GridNode  -   Use compressed connection: no
+[30.03.2016 00:52:58,313] [main] WARN  org.homedns.dade.jcgrid.GridNodeGeneric  -   Connecting to server...
+[30.03.2016 00:52:58,323] [Thread-1] WARN  org.homedns.dade.jcgrid.server.MainDemon  - Connection from /127.0.0.1:50385
+[30.03.2016 00:52:58,329] [main] WARN  org.homedns.dade.jcgrid.GridNodeGeneric  -   Ok
+[30.03.2016 00:52:58,330] [main] WARN  org.homedns.dade.jcgrid.GridNodeGeneric  -   Sending login information...
+[30.03.2016 00:52:58,349] [main] WARN  org.homedns.dade.jcgrid.GridNodeGeneric  -   Ok
+[30.03.2016 00:52:58,349] [main] WARN  org.homedns.dade.jcgrid.vfs.vfsSessionPool  - VFS session pool on path: /Users/Wenqi/Dropbox/NUS/sem 4/workspace/CS3243-Game-of-Tetris/cache_0
+[30.03.2016 00:52:58,349] [Thread-3] WARN  org.homedns.dade.jcgrid.server.HandlerThread [WORKER-none_0] - New session: none_0 [127.0.0.1:10102]
+[30.03.2016 00:52:58,349] [main] WARN  org.homedns.dade.jcgrid.worker.GridWorker  - VFS Session cache size: 0/64MB

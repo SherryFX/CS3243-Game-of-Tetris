@@ -1,9 +1,9 @@
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
@@ -30,6 +30,7 @@ public class PlayerTrainer {
     // The chromosomes will be saved into log.txt
     // For future runs, have chromosomes manually retrieved from log.txt.
     //
+    public static final int NUM_THREADS = 4;
     public static final int MAX_ALLOWED_EVOLUTIONS = 10;
     public static final int POPULATION_SIZE = 100;
 
@@ -37,15 +38,7 @@ public class PlayerTrainer {
 
         // Transfer all readings from log.txt to log_old.txt
         // log_old.txt is like a backup
-        FileInputStream srcStream = new FileInputStream("log.txt");
-        FileOutputStream destStream = new FileOutputStream("log_old.txt");
-        FileChannel src = srcStream.getChannel();
-        FileChannel dest = destStream.getChannel();
-        dest.transferFrom(src, 0, src.size());
-        srcStream.close();
-        destStream.close();
-
-        BufferedReader in = new BufferedReader(new FileReader("log.txt"));
+        backupLog();
 
         Configuration conf = new DefaultConfiguration();
         FitnessFunction fitnessFunction = new PlayerFitnessFunction();
@@ -68,48 +61,59 @@ public class PlayerTrainer {
 
         conf.setPopulationSize(POPULATION_SIZE);
         Genotype population = Genotype.randomInitialGenotype(conf);
-
+        //
         // ------------------------------------------------------------
 
         // MANUAL GENERATION OF CHROMOSOMES ---------------------------
         // Uncomment this section to manually generate chromosomes from log.txt
         // Population size will set to number of chromosomes read from log.txt
-        /*
-         * Population p = new Population(conf); String line = null; int count =
-         * 0; while ((line = in.readLine()) != null) { String[] arr =
-         * line.split(" "); genes = new Gene[7]; genes[0] = new DoubleGene(conf,
-         * 0, 2); genes[0].setAllele(Double.parseDouble(arr[0])); genes[1] = new
-         * DoubleGene(conf, 0, 2);
-         * genes[1].setAllele(Double.parseDouble(arr[1])); genes[2] = new
-         * DoubleGene(conf, 0, 2);
-         * genes[2].setAllele(Double.parseDouble(arr[2])); genes[3] = new
-         * DoubleGene(conf, 0, 2);
-         * genes[3].setAllele(Double.parseDouble(arr[3])); genes[4] = new
-         * DoubleGene(conf, 0, 2);
-         * genes[4].setAllele(Double.parseDouble(arr[4])); genes[5] = new
-         * DoubleGene(conf, 0, 2);
-         * genes[5].setAllele(Double.parseDouble(arr[5])); genes[6] = new
-         * DoubleGene(conf, 0, 2);
-         * genes[6].setAllele(Double.parseDouble(arr[6])); Chromosome c = new
-         * Chromosome(conf, genes); p.addChromosome(c); count++; }
-         * conf.setPopulationSize(count); Genotype population = new
-         * Genotype(conf, p);
-         */
+        // BufferedReader in = new BufferedReader(new FileReader("log.txt"));
+        // Population p = new Population(conf);
+        // String line = null;
+        // int count = 0;
+        // while ((line = in.readLine()) != null){
+        // String[] arr = line.split(" "); genes = new Gene[7]; genes[0] = new
+        // DoubleGene(conf,0, 2);
+        // genes[0].setAllele(Double.parseDouble(arr[0]));
+        // genes[1] = new DoubleGene(conf, 0, 2);
+        // genes[1].setAllele(Double.parseDouble(arr[1]));
+        // genes[2] = new DoubleGene(conf, 0, 2);
+        // genes[2].setAllele(Double.parseDouble(arr[2]));
+        // genes[3] = new DoubleGene(conf, 0, 2);
+        // genes[3].setAllele(Double.parseDouble(arr[3]));
+        // genes[4] = new DoubleGene(conf, 0, 2);
+        // genes[4].setAllele(Double.parseDouble(arr[4]));
+        // genes[5] = new DoubleGene(conf, 0, 2);
+        // genes[5].setAllele(Double.parseDouble(arr[5]));
+        // genes[6] = new DoubleGene(conf, 0, 2);
+        // genes[6].setAllele(Double.parseDouble(arr[6]));
+        // Chromosome c = new Chromosome(conf, genes);
+        // p.addChromosome(c);
+        // count++;
+        // }
+        // in.close();
+        // conf.setPopulationSize(count);
+        // Genotype population = new Genotype(conf, p);
 
         // ------------------------------------------------------------
-        in.close();
 
         for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
+            System.out.println("EVOLUTION CYCLE NO. " + i);
             population.evolve();
+            IChromosome[] chromosomes = population.getPopulation().toChromosomes();
+            updateLog(chromosomes);
         }
 
-        // Clear log.txt once data is backed up to log_old.txt
-        PrintWriter out = new PrintWriter("log.txt");
-        out.print("");
-        out.close();
+        IChromosome bestSolutionSoFar = population.getFittestChromosome();
 
-        out = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
-        IChromosome[] chromosomes = population.getPopulation().toChromosomes();
+        Arrays.stream(bestSolutionSoFar.getGenes()).mapToDouble(gene -> (double) gene.getAllele())
+            .forEach(System.out::println);
+    }
+
+    public static void updateLog(IChromosome[] chromosomes) throws IOException {
+        backupLog();
+        clearLog();
+        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
         for (int j = 0; j < chromosomes.length; j++) {
             String s = "";
             IChromosome c = chromosomes[j];
@@ -122,11 +126,22 @@ public class PlayerTrainer {
             out.println(s);
         }
         out.close();
+    }
 
-        IChromosome bestSolutionSoFar = population.getFittestChromosome();
+    public static void clearLog() throws FileNotFoundException {
+        PrintWriter out = new PrintWriter("log.txt");
+        out.print("");
+        out.close();
+    }
 
-        Arrays.stream(bestSolutionSoFar.getGenes()).mapToDouble(gene -> (double) gene.getAllele())
-            .forEach(System.out::println);
+    public static void backupLog() throws IOException {
+        FileInputStream srcStream = new FileInputStream("log.txt");
+        FileOutputStream destStream = new FileOutputStream("log_old.txt");
+        FileChannel src = srcStream.getChannel();
+        FileChannel dest = destStream.getChannel();
+        dest.transferFrom(src, 0, src.size());
+        srcStream.close();
+        destStream.close();
     }
 
 }
