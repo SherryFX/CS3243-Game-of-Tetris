@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 
-public class PlayerSkeleton2 {
+public class PlayerSkeletonReference {
     private static final float numFaultsWeight = 6.0f;
     private static final float numRowsClearedWeight = 0.8f;
     private static final float roughnessWeight = 0.9f;
@@ -21,7 +21,7 @@ public class PlayerSkeleton2 {
         State s = new State();
 
         ForkJoinPool executorService = new ForkJoinPool();
-        PlayerSkeleton2 p = new PlayerSkeleton2(executorService);
+        PlayerSkeletonReference p = new PlayerSkeletonReference(executorService);
 
         new TFrame(s);
         try {
@@ -73,7 +73,7 @@ public class PlayerSkeleton2 {
         EVALUATORS = evaluators.toArray(new MoveEvaluator[evaluators.size()]);
     }
 
-    public PlayerSkeleton2(ForkJoinPool forkJoinPool) {
+    public PlayerSkeletonReference(ForkJoinPool forkJoinPool) {
         this.mapReduce = new MapReduce(forkJoinPool);
         float[] weights = new float[] {363.5092f, 194.57817f, 188.69507f, 943.2513f, 396.27356f, 512.3429f, 604.4724f};
         // { 587.5112f, 438.03345f, 474.9645f, 939.3418f, 408.60773f, 815.7669f
@@ -81,7 +81,7 @@ public class PlayerSkeleton2 {
         this.evaluator = new WeightedSumEvaluator(EVALUATORS, weights);
     }
 
-    public PlayerSkeleton2(ForkJoinPool forkJoinPool, float[] weights) {
+    public PlayerSkeletonReference(ForkJoinPool forkJoinPool, float[] weights) {
         this.mapReduce = new MapReduce(forkJoinPool);
         this.evaluator = new WeightedSumEvaluator(EVALUATORS, weights);
     }

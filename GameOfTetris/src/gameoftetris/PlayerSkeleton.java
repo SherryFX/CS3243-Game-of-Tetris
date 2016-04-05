@@ -9,13 +9,13 @@ import java.util.Arrays;
 public class PlayerSkeleton {
 
     // public static double HEIGHT_SUM_WEIGHT = 0.51f;
-    public static double NUM_HOLES_WEIGHT = 2377.641f;
-    public static double COMPLETE_LINES_WEIGHT = 150.956056f;
-    public static double HEIGHT_VAR_WEIGHT = 327.15828f;
-    public static double LOST_WEIGHT = 943.2513f;
-    public static double MAX_HEIGHT_WEIGHT = 155.662536f;
-    public static double PIT_DEPTH_WEIGHT = 614.81148f;
-    public static double MEAN_HEIGHT_DIFF_WEIGHT = 513.80154f;
+    public static double NUM_HOLES_WEIGHT;
+    public static double COMPLETE_LINES_WEIGHT;
+    public static double HEIGHT_VAR_WEIGHT;
+    public static double LOST_WEIGHT;
+    public static double MAX_HEIGHT_WEIGHT;
+    public static double PIT_DEPTH_WEIGHT;
+    public static double MEAN_HEIGHT_DIFF_WEIGHT;
 
     public static class TestState {
         int[][] field;
