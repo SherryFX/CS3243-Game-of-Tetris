@@ -97,10 +97,24 @@ public class PlayerTrainer {
 
         // ------------------------------------------------------------
 
+     // WRITE RANDOM POPULATION TO LOG.TXT
+        // WARNING: This will delete your current log.txt contents
+//        IChromosome[] chromos = population.getPopulation().toChromosomes();
+//        updateLog(chromos);
+        
+        
         for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
             System.out.println("EVOLUTION CYCLE NO. " + i);
             population.evolve();
             IChromosome[] chromosomes = population.getPopulation().toChromosomes();
+            IChromosome fittest = population.getFittestChromosome();
+            Gene[] gene_array = fittest.getGenes();
+            String s = "Fittest chromosome weights and value: ";
+            for (int g = 0; g < gene_array.length; g++){
+             s += gene_array[g].getAllele() + " ";
+            }
+            s += fittest.getFitnessValue() + " ";
+            System.out.println(s);
             updateLog(chromosomes);
         }
 
