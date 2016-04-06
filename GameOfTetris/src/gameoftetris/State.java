@@ -1,5 +1,3 @@
-package gameoftetris;
-
 import java.awt.Color;
 
 public class State {
@@ -38,20 +36,14 @@ public class State {
 
     // the next several arrays define the piece vocabulary in detail
     // width of the pieces [piece ID][orientation]
-    protected static int[][] pWidth = { {2}, {1, 4}, {2, 3, 2, 3},
-        {2, 3, 2, 3}, {2, 3, 2, 3}, {3, 2}, {3, 2}};
+    protected static int[][] pWidth = { {2}, {1, 4}, {2, 3, 2, 3}, {2, 3, 2, 3}, {2, 3, 2, 3}, {3, 2}, {3, 2}};
     // height of the pieces [piece ID][orientation]
-    private static int[][] pHeight = { {2}, {4, 1}, {3, 2, 3, 2}, {3, 2, 3, 2},
-        {3, 2, 3, 2}, {2, 3}, {2, 3}};
-    private static int[][][] pBottom = { {{0, 0}}, { {0}, {0, 0, 0, 0}},
-        { {0, 0}, {0, 1, 1}, {2, 0}, {0, 0, 0}},
-        { {0, 0}, {0, 0, 0}, {0, 2}, {1, 1, 0}},
-        { {0, 1}, {1, 0, 1}, {1, 0}, {0, 0, 0}}, { {0, 0, 1}, {1, 0}},
+    private static int[][] pHeight = { {2}, {4, 1}, {3, 2, 3, 2}, {3, 2, 3, 2}, {3, 2, 3, 2}, {2, 3}, {2, 3}};
+    private static int[][][] pBottom = { {{0, 0}}, { {0}, {0, 0, 0, 0}}, { {0, 0}, {0, 1, 1}, {2, 0}, {0, 0, 0}},
+        { {0, 0}, {0, 0, 0}, {0, 2}, {1, 1, 0}}, { {0, 1}, {1, 0, 1}, {1, 0}, {0, 0, 0}}, { {0, 0, 1}, {1, 0}},
         { {1, 0, 0}, {0, 1}}};
-    private static int[][][] pTop = { {{2, 2}}, { {4}, {1, 1, 1, 1}},
-        { {3, 1}, {2, 2, 2}, {3, 3}, {1, 1, 2}},
-        { {1, 3}, {2, 1, 1}, {3, 3}, {2, 2, 2}},
-        { {3, 2}, {2, 2, 2}, {2, 3}, {1, 2, 1}}, { {1, 2, 2}, {3, 2}},
+    private static int[][][] pTop = { {{2, 2}}, { {4}, {1, 1, 1, 1}}, { {3, 1}, {2, 2, 2}, {3, 3}, {1, 1, 2}},
+        { {1, 3}, {2, 1, 1}, {3, 3}, {2, 2, 2}}, { {3, 2}, {2, 2, 2}, {2, 3}, {1, 2, 1}}, { {1, 2, 2}, {3, 2}},
         { {2, 2, 1}, {2, 3}}};
 
     // initialize legalMoves
@@ -157,8 +149,7 @@ public class State {
         int height = top[slot] - pBottom[nextPiece][orient][0];
         // for each column beyond the first in the piece
         for (int c = 1; c < pWidth[nextPiece][orient]; c++) {
-            height = Math.max(height, top[slot + c]
-                - pBottom[nextPiece][orient][c]);
+            height = Math.max(height, top[slot + c] - pBottom[nextPiece][orient][c]);
         }
 
         // check if game ended
@@ -171,8 +162,7 @@ public class State {
         for (int i = 0; i < pWidth[nextPiece][orient]; i++) {
 
             // from bottom to top of brick
-            for (int h = height + pBottom[nextPiece][orient][i]; h < height
-                + pTop[nextPiece][orient][i]; h++) {
+            for (int h = height + pBottom[nextPiece][orient][i]; h < height + pTop[nextPiece][orient][i]; h++) {
                 field[h][i + slot] = turn;
             }
         }
@@ -267,8 +257,7 @@ public class State {
     // visualization
     // clears the area where the next piece is shown (top)
     public void clearNext() {
-        label.filledRectangleLL(0, ROWS + .9, COLS, 4.2,
-            TLabel.DEFAULT_CLEAR_COLOR);
+        label.filledRectangleLL(0, ROWS + .9, COLS, 4.2, TLabel.DEFAULT_CLEAR_COLOR);
         label.line(0, 0, 0, ROWS + 5);
         label.line(COLS, 0, COLS, ROWS + 5);
     }

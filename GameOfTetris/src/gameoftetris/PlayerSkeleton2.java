@@ -1,12 +1,10 @@
-package gameoftetris;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 
-public class PlayerSkeleton2 {
+public class PlayerSkeletonReference {
     private static final float numFaultsWeight = 6.0f;
     private static final float numRowsClearedWeight = 0.8f;
     private static final float roughnessWeight = 0.9f;
@@ -23,7 +21,7 @@ public class PlayerSkeleton2 {
         State s = new State();
 
         ForkJoinPool executorService = new ForkJoinPool();
-        PlayerSkeleton2 p = new PlayerSkeleton2(executorService);
+        PlayerSkeletonReference p = new PlayerSkeletonReference(executorService);
 
         new TFrame(s);
         try {
@@ -43,8 +41,7 @@ public class PlayerSkeleton2 {
             executorService.shutdown();
         }
 
-        System.out.println("You have completed " + s.getRowsCleared()
-            + " rows.");
+        System.out.println("You have completed " + s.getRowsCleared() + " rows.");
     }
 
     public static final MoveEvaluator[] EVALUATORS;
@@ -76,16 +73,15 @@ public class PlayerSkeleton2 {
         EVALUATORS = evaluators.toArray(new MoveEvaluator[evaluators.size()]);
     }
 
-    public PlayerSkeleton2(ForkJoinPool forkJoinPool) {
+    public PlayerSkeletonReference(ForkJoinPool forkJoinPool) {
         this.mapReduce = new MapReduce(forkJoinPool);
-        float[] weights = new float[] {363.5092f, 194.57817f, 188.69507f,
-            943.2513f, 396.27356f, 512.3429f, 604.4724f};
+        float[] weights = new float[] {363.5092f, 194.57817f, 188.69507f, 943.2513f, 396.27356f, 512.3429f, 604.4724f};
         // { 587.5112f, 438.03345f, 474.9645f, 939.3418f, 408.60773f, 815.7669f
         // };
         this.evaluator = new WeightedSumEvaluator(EVALUATORS, weights);
     }
 
-    public PlayerSkeleton2(ForkJoinPool forkJoinPool, float[] weights) {
+    public PlayerSkeletonReference(ForkJoinPool forkJoinPool, float[] weights) {
         this.mapReduce = new MapReduce(forkJoinPool);
         this.evaluator = new WeightedSumEvaluator(EVALUATORS, weights);
     }
@@ -96,18 +92,15 @@ public class PlayerSkeleton2 {
         return pickMove(currentState, nextPiece, legalMoves);
     }
 
-    public int pickMove(ImmutableState currentState, int nextPiece,
-        int[][] legalMoves) {
+    public int pickMove(ImmutableState currentState, int nextPiece, int[][] legalMoves) {
         possibleMoves.clear();
         for (int moveIndex = 0; moveIndex < legalMoves.length; ++moveIndex) {
             int orientation = legalMoves[moveIndex][0];
             int position = legalMoves[moveIndex][1];
-            possibleMoves.add(new Move(currentState, moveIndex, nextPiece,
-                orientation, position));
+            possibleMoves.add(new Move(currentState, moveIndex, nextPiece, orientation, position));
         }
 
-        return mapReduce.mapReduce(EVAL_MOVE_FUNC, PICK_MOVE_FUNC,
-            possibleMoves);
+        return mapReduce.mapReduce(EVAL_MOVE_FUNC, PICK_MOVE_FUNC, possibleMoves);
     }
 
     public static void printState(int[][] field) {
@@ -124,30 +117,30 @@ public class PlayerSkeleton2 {
         @Override
         public EvaluationResult map(Move move) {
             ImmutableState state = move.getState();
-            MoveResult moveResult = state.move(move.getPiece(),
-                move.getOrientation(), move.getPosition());
+            MoveResult moveResult = state.move(move.getPiece(), move.getOrientation(), move.getPosition());
             float score = evaluator.map(moveResult);
             return new EvaluationResult(move.getIndex(), score);
         }
     };
 
-    private static final ReduceFunc<EvaluationResult, Integer> PICK_MOVE_FUNC = new ReduceFunc<EvaluationResult, Integer>() {
-        @Override
-        public Integer reduce(Iterable<EvaluationResult> results) {
-            float maxScore = -Float.MAX_VALUE;
-            int move = -1;
+    private static final ReduceFunc<EvaluationResult, Integer> PICK_MOVE_FUNC =
+        new ReduceFunc<EvaluationResult, Integer>() {
+            @Override
+            public Integer reduce(Iterable<EvaluationResult> results) {
+                float maxScore = -Float.MAX_VALUE;
+                int move = -1;
 
-            for (EvaluationResult result : results) {
-                float score = result.getScore();
-                if (score > maxScore) {
-                    maxScore = score;
-                    move = result.getMove();
+                for (EvaluationResult result : results) {
+                    float score = result.getScore();
+                    if (score > maxScore) {
+                        maxScore = score;
+                        move = result.getMove();
+                    }
                 }
-            }
 
-            return move;
-        }
-    };
+                return move;
+            }
+        };
 
     // Nested classes because we are only allowed to use one file
     /**
@@ -194,8 +187,7 @@ public class PlayerSkeleton2 {
             int numWells = 0;
 
             for (int column = 1; column < top.length - 1; ++column) {
-                if (top[column - 1] < top[column]
-                    && top[column] < top[column + 1]) {
+                if (top[column - 1] < top[column] && top[column] < top[column + 1]) {
                     ++numWells;
                 }
             }
@@ -217,10 +209,8 @@ public class PlayerSkeleton2 {
             int[] top = moveResult.getState().getTop();
 
             for (int column = 1; column < top.length - 1; ++column) {
-                if (top[column - 1] < top[column]
-                    && top[column] < top[column + 1]) {
-                    int depth = Math.max(top[column] - top[column - 1],
-                        top[column + 1] - top[column]);
+                if (top[column - 1] < top[column] && top[column] < top[column + 1]) {
+                    int depth = Math.max(top[column] - top[column - 1], top[column + 1] - top[column]);
                     maxDepth = Math.max(maxDepth, depth);
                 }
             }
@@ -230,8 +220,7 @@ public class PlayerSkeleton2 {
             }
 
             if (top[top.length - 1] < top[top.length - 2]) {
-                maxDepth = Math.max(maxDepth, top[top.length - 2]
-                    - top[top.length - 1]);
+                maxDepth = Math.max(maxDepth, top[top.length - 2] - top[top.length - 1]);
             }
 
             return -(float) maxDepth;
@@ -476,8 +465,7 @@ public class PlayerSkeleton2 {
             int height = top[slot] - pBottom[piece][orient][0];
             // for each column beyond the first in the piece
             for (int c = 1; c < pWidth[piece][orient]; c++) {
-                height = Math.max(height, top[slot + c]
-                    - pBottom[piece][orient][c]);
+                height = Math.max(height, top[slot + c] - pBottom[piece][orient][c]);
             }
 
             // check if game ended
@@ -488,8 +476,7 @@ public class PlayerSkeleton2 {
             // for each column in the piece - fill in the appropriate blocks
             for (int i = 0; i < pWidth[piece][orient]; i++) {
                 // from bottom to top of brick
-                for (int h = height + pBottom[piece][orient][i]; h < height
-                    + pTop[piece][orient][i]; h++) {
+                for (int h = height + pBottom[piece][orient][i]; h < height + pTop[piece][orient][i]; h++) {
                     field[h][i + slot] = turn;
                 }
             }
@@ -561,20 +548,14 @@ public class PlayerSkeleton2 {
         private static final int[] pOrients = {1, 2, 4, 4, 4, 2, 2};
         // the next several arrays define the piece vocabulary in detail
         // width of the pieces [piece ID][orientation]
-        private static final int[][] pWidth = { {2}, {1, 4}, {2, 3, 2, 3},
-            {2, 3, 2, 3}, {2, 3, 2, 3}, {3, 2}, {3, 2}};
+        private static final int[][] pWidth = { {2}, {1, 4}, {2, 3, 2, 3}, {2, 3, 2, 3}, {2, 3, 2, 3}, {3, 2}, {3, 2}};
         // height of the pieces [piece ID][orientation]
-        private static int[][] pHeight = { {2}, {4, 1}, {3, 2, 3, 2},
-            {3, 2, 3, 2}, {3, 2, 3, 2}, {2, 3}, {2, 3}};
-        private static int[][][] pBottom = { {{0, 0}}, { {0}, {0, 0, 0, 0}},
-            { {0, 0}, {0, 1, 1}, {2, 0}, {0, 0, 0}},
-            { {0, 0}, {0, 0, 0}, {0, 2}, {1, 1, 0}},
-            { {0, 1}, {1, 0, 1}, {1, 0}, {0, 0, 0}}, { {0, 0, 1}, {1, 0}},
+        private static int[][] pHeight = { {2}, {4, 1}, {3, 2, 3, 2}, {3, 2, 3, 2}, {3, 2, 3, 2}, {2, 3}, {2, 3}};
+        private static int[][][] pBottom = { {{0, 0}}, { {0}, {0, 0, 0, 0}}, { {0, 0}, {0, 1, 1}, {2, 0}, {0, 0, 0}},
+            { {0, 0}, {0, 0, 0}, {0, 2}, {1, 1, 0}}, { {0, 1}, {1, 0, 1}, {1, 0}, {0, 0, 0}}, { {0, 0, 1}, {1, 0}},
             { {1, 0, 0}, {0, 1}}};
-        private static int[][][] pTop = { {{2, 2}}, { {4}, {1, 1, 1, 1}},
-            { {3, 1}, {2, 2, 2}, {3, 3}, {1, 1, 2}},
-            { {1, 3}, {2, 1, 1}, {3, 3}, {2, 2, 2}},
-            { {3, 2}, {2, 2, 2}, {2, 3}, {1, 2, 1}}, { {1, 2, 2}, {3, 2}},
+        private static int[][][] pTop = { {{2, 2}}, { {4}, {1, 1, 1, 1}}, { {3, 1}, {2, 2, 2}, {3, 3}, {1, 1, 2}},
+            { {1, 3}, {2, 1, 1}, {3, 3}, {2, 2, 2}}, { {3, 2}, {2, 2, 2}, {2, 3}, {1, 2, 1}}, { {1, 2, 2}, {3, 2}},
             { {2, 2, 1}, {2, 3}}};
 
         // initialize legalMoves
@@ -608,17 +589,14 @@ public class PlayerSkeleton2 {
             this.forkJoinPool = forkJoinPool;
         }
 
-        public <Src, Dst> void map(MapFunc<Src, Dst> mapFunc,
-            Iterable<Src> inputs, Collection<Dst> outputs) {
-            forkJoinPool
-                .invoke(new MapTask<Src, Dst>(mapFunc, inputs, outputs));
+        public <Src, Dst> void map(MapFunc<Src, Dst> mapFunc, Iterable<Src> inputs, Collection<Dst> outputs) {
+            forkJoinPool.invoke(new MapTask<Src, Dst>(mapFunc, inputs, outputs));
         }
 
-        public <SrcT, IntT, DstT> DstT mapReduce(MapFunc<SrcT, IntT> mapFunc,
-            ReduceFunc<IntT, DstT> reduceFunc, Iterable<SrcT> inputs) {
+        public <SrcT, IntT, DstT> DstT mapReduce(MapFunc<SrcT, IntT> mapFunc, ReduceFunc<IntT, DstT> reduceFunc,
+            Iterable<SrcT> inputs) {
 
-            return forkJoinPool.invoke(new MapReduceTask<SrcT, IntT, DstT>(
-                mapFunc, reduceFunc, inputs));
+            return forkJoinPool.invoke(new MapReduceTask<SrcT, IntT, DstT>(mapFunc, reduceFunc, inputs));
         }
 
         private final ForkJoinPool forkJoinPool;
@@ -633,8 +611,7 @@ public class PlayerSkeleton2 {
     }
 
     public static class MapTask<SrcT, DstT> extends ForkJoinTask<Void> {
-        public MapTask(MapFunc<SrcT, DstT> mapFunc, Iterable<SrcT> inputs,
-            Collection<DstT> outputs) {
+        public MapTask(MapFunc<SrcT, DstT> mapFunc, Iterable<SrcT> inputs, Collection<DstT> outputs) {
             this.mapFunc = mapFunc;
             this.inputs = inputs;
             this.outputs = outputs;
@@ -697,10 +674,8 @@ public class PlayerSkeleton2 {
         }
     }
 
-    public static class MapReduceTask<SrcT, IntT, DstT> extends
-        ForkJoinTask<DstT> {
-        public MapReduceTask(MapFunc<SrcT, IntT> mapFunc,
-            ReduceFunc<IntT, DstT> reduceFunc, Iterable<SrcT> inputs) {
+    public static class MapReduceTask<SrcT, IntT, DstT> extends ForkJoinTask<DstT> {
+        public MapReduceTask(MapFunc<SrcT, IntT> mapFunc, ReduceFunc<IntT, DstT> reduceFunc, Iterable<SrcT> inputs) {
             this.inputs = inputs;
             this.mapFunc = mapFunc;
             this.reduceFunc = reduceFunc;
@@ -710,8 +685,7 @@ public class PlayerSkeleton2 {
         protected boolean exec() {
             // Map
             ArrayList<IntT> mapResults = new ArrayList<IntT>();
-            MapTask<SrcT, IntT> mapTask = new MapTask<SrcT, IntT>(mapFunc,
-                inputs, mapResults);
+            MapTask<SrcT, IntT> mapTask = new MapTask<SrcT, IntT>(mapFunc, inputs, mapResults);
             mapTask.invoke();
             // Reduce
             setRawResult(reduceFunc.reduce(mapResults));
@@ -743,8 +717,7 @@ public class PlayerSkeleton2 {
     }
 
     private static class Move {
-        public Move(ImmutableState state, int index, int piece,
-            int orientation, int position) {
+        public Move(ImmutableState state, int index, int piece, int orientation, int position) {
             this.state = state;
             this.index = index;
             this.piece = piece;
@@ -804,8 +777,7 @@ public class PlayerSkeleton2 {
      * Result of a move, returned by ImmutableState.move
      */
     public static class MoveResult {
-        public MoveResult(int field[][], int top[], int turn, boolean lost,
-            int rowsCleared) {
+        public MoveResult(int field[][], int top[], int turn, boolean lost, int rowsCleared) {
             this.state = new ImmutableState(field, top, turn);
             this.rowsCleared = rowsCleared;
             this.lost = lost;

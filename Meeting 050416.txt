@@ -1,0 +1,29 @@
+Intro - Renfred
+
+Learning Strategy - Leo
+
+Novel and Significant Contributions - Leo
+
+Experimental Results - Lim Kiat / Renfred
+
+Observations and Analysis of Results - FX
+
+Learning method - multithreading - Wenqi
+
+
+
+Experimental results
+
+1.	1 layer AI, compare 8cols vs 10cols with playerTrainer to establish that learning with an 8col state gives results transferable to the 10col state
+	Same 'root' seeds i.e. same random initial weights for population
+
+	| Evolutions | best num lines cleared (8col) | best num lines cleared (10col) | avg lines cleared (8col) | avg lines cleared (10col) | 
+
+2.	1 layer vs 2 layers, 8col to show that 2 layers AI does much better than 1 layer
+
+	| Evolutions | best num lines cleared (1-l) | best num lines cleared (2-l) | avg lines cleared (1-l) | avg lines cleared (2-l) | 
+	(averages to show that genetic algorithm improves AI with every evolution)
+
+3.	Final results for 10 columns after 20 evolutions
+	Run using best weights given in log file 'Leo 20 evolutions log.txt' with playerskeleton
+	Run as many times as possible - then take average
