@@ -1,3 +1,5 @@
+package grid;
+
 import java.util.Arrays;
 
 // Features being used are:
@@ -285,7 +287,7 @@ public class PlayerSkeleton {
     public static void main(String[] args) {
 
         State s = new State();
-        //new TFrame(s);
+        // new TFrame(s);
         double[] weights =
             {1.7851855342334024, 1.4138726176225629, 0.3567297944529728, 0.6249287636118577, 0.051962392158941606,
                 0.52385888919136, 0.12090744319379954};
@@ -293,17 +295,17 @@ public class PlayerSkeleton {
         int i = 0;
         while (!s.lost) {
             s.makeMove(p.pickMove(s, s.legalMoves()));
-            //System.out.println(s.getRowsCleared());
-           //s.draw();
-            //s.drawNext(0, 0);
+            // System.out.println(s.getRowsCleared());
+            // s.draw();
+            // s.drawNext(0, 0);
             if (i > 10) {
-            	System.out.println(i);
-            	i=0;
+                System.out.println(i);
+                i = 0;
             } else {
-            	i++;
+                i++;
             }
         }
-        
+
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");
     }
 
@@ -327,7 +329,7 @@ public class PlayerSkeleton {
         while (!s.lost) {
             s.makeMove(pickMove(s, s.legalMoves()));
             // if (s.getRowsCleared() % 100000 == 0) {
-            // System.out.println(s.getRowsCleared());
+            System.out.println(s.getRowsCleared());
             // }
         }
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");

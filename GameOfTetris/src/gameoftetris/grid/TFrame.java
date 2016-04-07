@@ -1,3 +1,4 @@
+package grid;
 
 
 import java.awt.Graphics2D;

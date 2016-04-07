@@ -1,3 +1,5 @@
+package grid;
+
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -6,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
-import java.util.Arrays;
 
 import org.jgap.Chromosome;
 import org.jgap.Configuration;
@@ -97,12 +98,11 @@ public class PlayerTrainer {
 
         // ------------------------------------------------------------
 
-     // WRITE RANDOM POPULATION TO LOG.TXT
+        // WRITE RANDOM POPULATION TO LOG.TXT
         // WARNING: This will delete your current log.txt contents
-//        IChromosome[] chromos = population.getPopulation().toChromosomes();
-//        updateLog(chromos);
-        
-        
+        // IChromosome[] chromos = population.getPopulation().toChromosomes();
+        // updateLog(chromos);
+
         for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
             System.out.println("EVOLUTION CYCLE NO. " + i);
             population.evolve();
@@ -110,8 +110,8 @@ public class PlayerTrainer {
             IChromosome fittest = population.getFittestChromosome();
             Gene[] gene_array = fittest.getGenes();
             String s = "Fittest chromosome weights and value: ";
-            for (int g = 0; g < gene_array.length; g++){
-             s += gene_array[g].getAllele() + " ";
+            for (int g = 0; g < gene_array.length; g++) {
+                s += gene_array[g].getAllele() + " ";
             }
             s += fittest.getFitnessValue() + " ";
             System.out.println(s);
@@ -120,8 +120,16 @@ public class PlayerTrainer {
 
         IChromosome bestSolutionSoFar = population.getFittestChromosome();
 
-        Arrays.stream(bestSolutionSoFar.getGenes()).mapToDouble(gene -> (double) gene.getAllele())
-            .forEach(System.out::println);
+        Gene[] geneArray = bestSolutionSoFar.getGenes();
+        double[] weights = new double[geneArray.length];
+        int i = 0;
+        for (Gene g : geneArray) {
+            weights[i] = (double) g.getAllele();
+            i++;
+        }
+        for (double d : weights) {
+            System.out.println(d);
+        }
     }
 
     public static void updateLog(IChromosome[] chromosomes) throws IOException {

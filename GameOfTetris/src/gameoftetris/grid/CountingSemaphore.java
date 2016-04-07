@@ -1,3 +1,4 @@
+package grid;
 
 public class CountingSemaphore {
 	private int signals = 0;

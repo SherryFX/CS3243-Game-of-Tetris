@@ -1,3 +1,4 @@
+package grid;
 
 public class Mutex {
 	private boolean signal = true;
