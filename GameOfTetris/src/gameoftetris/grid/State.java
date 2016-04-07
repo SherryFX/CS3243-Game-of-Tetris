@@ -1,8 +1,9 @@
 package grid;
+
 import java.awt.Color;
 
 public class State {
-    public static final int COLS = 10;
+    public static final int COLS = 8;
     public static final int ROWS = 21;
     public static final int N_PIECES = 7;
 
