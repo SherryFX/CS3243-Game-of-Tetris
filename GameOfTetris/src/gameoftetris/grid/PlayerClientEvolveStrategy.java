@@ -1,4 +1,5 @@
 package grid;
+
 /*
  * This file is part of JGAP. JGAP offers a dual license model containing the
  * LGPL as well as the MPL. For licensing information please see the file
@@ -32,7 +33,7 @@ public class PlayerClientEvolveStrategy implements IClientEvolveStrategy {
 
     private IClientFeedback m_clientFeedback;
 
-    private final int m_maxEvolutions = 3;
+    private final int m_maxEvolutions = 40;
 
     private Population m_pop;
 
