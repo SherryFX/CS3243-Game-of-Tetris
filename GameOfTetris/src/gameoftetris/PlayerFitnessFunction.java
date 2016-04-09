@@ -14,6 +14,6 @@ public class PlayerFitnessFunction extends FitnessFunction {
     // Evaluation of subject's fitness
     protected double evaluate(IChromosome subject) {
         double[] weights = Arrays.stream(subject.getGenes()).mapToDouble(gene -> (double) gene.getAllele()).toArray();
-        return new PlayerSkeleton(weights).run();
+        return new PlayerSkeletonOneLayer(weights).run();
     }
 }
