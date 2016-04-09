@@ -34,7 +34,7 @@ public class PlayerTrainer {
     // For future runs, have chromosomes manually retrieved from log.txt.
     //
     public static final int NUM_THREADS = 4;
-    public static final int MAX_ALLOWED_EVOLUTIONS = 1;
+    public static final int MAX_ALLOWED_EVOLUTIONS = 2;
     public static final int POPULATION_SIZE = 100;
 
     public static void main(String[] args) throws Exception {
@@ -105,7 +105,6 @@ public class PlayerTrainer {
 //        IChromosome[] chromos = population.getPopulation().toChromosomes();
 //        updateLog(chromos);
         
-        
         for (int i = 0; i < MAX_ALLOWED_EVOLUTIONS; i++) {
             System.out.println("EVOLUTION CYCLE NO. " + i);
             population.evolve();
@@ -118,7 +117,7 @@ public class PlayerTrainer {
             }
             s += fittest.getFitnessValue() + " ";
             System.out.println(s);
-            updateLog(chromosomes);
+            updateLog(chromosomes, i);
         }
 
 //        IChromosome bestSolutionSoFar = population.getFittestChromosome();
@@ -127,10 +126,11 @@ public class PlayerTrainer {
 //            .forEach(System.out::println);
     }
 
-    public static void updateLog(IChromosome[] chromosomes) throws IOException {
-        backupLog();
-        clearLog();
-        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
+    public static void updateLog(IChromosome[] chromosomes, int index) throws IOException {
+    //    backupLog();
+    //    clearLog();
+    	String fileName = "log" + index + ".txt";
+        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)));
         for (int j = 0; j < chromosomes.length; j++) {
             String s = "";
             IChromosome c = chromosomes[j];
