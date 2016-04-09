@@ -120,8 +120,8 @@ public class PlayerTrainer {
             updateLog(chromosomes, i);
         }
 
-//        IChromosome bestSolutionSoFar = population.getFittestChromosome();
-//
+        IChromosome bestSolutionSoFar = population.getFittestChromosome();
+
 //        Arrays.stream(bestSolutionSoFar.getGenes()).mapToDouble(gene -> (double) gene.getAllele())
 //            .forEach(System.out::println);
     }
@@ -130,7 +130,8 @@ public class PlayerTrainer {
     //    backupLog();
     //    clearLog();
     	String fileName = "log" + index + ".txt";
-        PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)));
+        PrintWriter weightsOut = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)));
+        double r = 0;
         for (int j = 0; j < chromosomes.length; j++) {
             String s = "";
             IChromosome c = chromosomes[j];
@@ -139,10 +140,12 @@ public class PlayerTrainer {
                 Gene g = gene_array[k];
                 s += (double) g.getAllele() + " ";
             }
-            s += c.getFitnessValue();
-            out.println(s);
+            r += c.getFitnessValue();
+            weightsOut.println(s);
         }
-        out.close();
+        weightsOut.close();
+        double avg = r/chromosomes.length;
+        System.out.println("Average rows is: " + avg);
     }
 
     public static void clearLog() throws FileNotFoundException {
