@@ -1,12 +1,5 @@
 import java.util.Arrays;
 
-// Features being used are:
-// 1. Height sum
-// 2. Number of holes
-// 3. Completed lines
-// 4. Height variation (between adjacent columns)
-// 5. Terminal i.e. lost state
-
 /**
  * This class is an implementation of a goal based Tetris playing agent. It
  * makes use of 2-layer local search to determine the best move to make next
@@ -97,8 +90,6 @@ public class PlayerSkeleton {
                 top[slot + c] = height + pTop[piece][orient][c];
             }
 
-            int rowsCleared = 0;
-
             // check for full rows - starting at the top
             for (int r = height + pHeight[piece][orient] - 1; r >= height; r--) {
                 // check all columns in the row
@@ -186,6 +177,10 @@ public class PlayerSkeleton {
         return h;
     }
 
+    /*
+     * ===================== Features calculations =====================
+     */
+
     // By default, set the lost state value as -10
     private int lostStateValue(TestState state) {
         return hasLost(state) ? -10 : 0;
@@ -236,44 +231,42 @@ public class PlayerSkeleton {
         return s.lost;
     }
 
-    // Depth of pits, a pit is a column with adjacent columns higher by at least
-    // two blocks and the pit depth
-    // is defined as the difference between the height of the pit column and the
-    // shortest adjacent column.
+    // The sum of all pit depths. A pit is defined as the difference in height
+    // between a column and its two adjacent columns, with a minimum difference
+    // of 3.
     public double pitDepthValue(TestState s) {
         int[] top = s.top;
         int pitDepthSum = 0;
 
-        int pitHeight;
-        int leftOfPitHeight;
-        int rightOfPitHeight;
+        int pitColHeight;
+        int leftColHeight;
+        int rightColHeight;
 
         // pit depth of first column
-        pitHeight = top[0];
-        rightOfPitHeight = top[1];
-        int diff = rightOfPitHeight - pitHeight;
+        pitColHeight = top[0];
+        rightColHeight = top[1];
+        int diff = rightColHeight - pitColHeight;
         if (diff > 2) {
             pitDepthSum += diff;
         }
 
         for (int col = 0; col < State.COLS - 2; col++) {
-            leftOfPitHeight = top[col];
-            pitHeight = top[col + 1];
-            rightOfPitHeight = top[col + 2];
+            leftColHeight = top[col];
+            pitColHeight = top[col + 1];
+            rightColHeight = top[col + 2];
 
-            int leftDiff = leftOfPitHeight - pitHeight;
-            int rightDiff = rightOfPitHeight - pitHeight;
-            int minDiff = leftDiff < rightDiff ? leftDiff : rightDiff;
-
+            int leftDiff = leftColHeight - pitColHeight;
+            int rightDiff = rightColHeight - pitColHeight;
+            int minDiff = Math.min(leftDiff, rightDiff);
             if (minDiff > 2) {
                 pitDepthSum += minDiff;
             }
         }
 
         // pit depth of last column
-        pitHeight = top[State.COLS - 1];
-        leftOfPitHeight = top[State.COLS - 2];
-        diff = leftOfPitHeight - pitHeight;
+        pitColHeight = top[State.COLS - 1];
+        leftColHeight = top[State.COLS - 2];
+        diff = leftColHeight - pitColHeight;
         if (diff > 2) {
             pitDepthSum += diff;
         }
@@ -282,8 +275,8 @@ public class PlayerSkeleton {
 
     }
 
-    // Mean height difference, the average of the difference between the height
-    // of each column and the mean height of the state.
+    // The mean height difference is the average of all height differences
+    // between each adjacent columns
     public double meanHeightDiffValue(TestState s) {
         int[] top = s.top;
 
@@ -305,26 +298,15 @@ public class PlayerSkeleton {
     public static void main(String[] args) {
 
         State s = new State();
-        // new TFrame(s);
+        // The optimal set of weights found after 20 evolutions
         double[] weights =
             {1.7851855342334024, 1.4138726176225629, 0.3567297944529728, 0.6249287636118577, 0.051962392158941606,
                 0.52385888919136, 0.12090744319379954};
-        // Lim Kiat's weights
-        // double[] weights = {
-        // 1.6189775517895122, 1.2139713563833943, 0.23899117593093844,
-        // 1.1223224183336409,
-        // 0.041885117371605274, 0.4502741786679134, 0.2123779806002879};
         PlayerSkeleton p = new PlayerSkeleton(weights);
-        int i = 0;
         while (!s.lost) {
             s.makeMove(p.pickMove(s, s.legalMoves()));
             // System.out.println(s.getRowsCleared());
-            // s.draw();
-            // s.drawNext(0, 0);
-            /*
-             * if (i > 10) { System.out.println(i); i = 0; } else { i++; }
-             */}
-
+        }
         System.out.println("You have completed " + s.getRowsCleared() + " rows.");
     }
 
@@ -337,9 +319,6 @@ public class PlayerSkeleton {
         PIT_DEPTH_WEIGHT = weights[5];
         MEAN_HEIGHT_DIFF_WEIGHT = weights[6];
 
-    }
-
-    public PlayerSkeleton() {
     }
 
     // This method is used to train the agent via a genetic algorithm
@@ -357,6 +336,9 @@ public class PlayerSkeleton {
         return s.getRowsCleared();
     }
 
+    /*
+     * =============== Random info copied from State.java ===============
+     */
     public static final int COLS = State.COLS;
     public static final int ROWS = State.ROWS;
     public static final int N_PIECES = State.N_PIECES;
